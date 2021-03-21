@@ -1,5 +1,0 @@
-STARTUP(motld_start.o)
-ENTRY(__rtems_entry_point)
-EXTERN(__vectors)
-
-INCLUDE linkcmds.share
