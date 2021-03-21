@@ -1,6 +1,7 @@
 %define name rtems
-%define version 4.10.2 
-%define NVmajor_inst %{name}-4.10
+%define version 5
+#%%define NVmajor_inst %{name}-4.10
+
 %define release 1
 %define arch noarch
 %define repository gemdev
@@ -11,13 +12,14 @@
 %global __os_install_post /usr/lib/rpm/brp-ldconfig %{nil}
 %global __os_install_post /usr/lib/rpm/brp-compress %{nil}
 
-Name: %{name}
+Name: %{name}%{version}
 Version: %{version}
-Release: 4%{?dist}
+Release: 0%{?dist}
 Summary: RTEMS installation for development on ppc.
 License: Fixme
 Source: %{name}-%{version}.tar.gz
-#BuildRequires: podman
+BuildRequires: yum-utils autoconf automake binutils gcc gcc-c++ gdb make patch bison flex xz unzip ncurses-devel texinfo zlib-devel git 
+BuildRequires: python3 python3-pip python3-setuptools python3-devel texinfo spax
 
 %description
 This is the %{name} RPM.
@@ -27,13 +29,16 @@ This is the %{name} RPM.
 %setup -q
 
 %build
+alternatives --set python /usr/bin/python3
+./rtems-setup.sh
+
 #mkdir %{_builddir}/tmp
 #podman build -t centos8:RTEMS -f Containerfile
 #podman run --rm -v %{_builddir}/tmp:/home/user/tmp -w /home/user/tmp  -i -t -d --name rtems_builder centos8:RTEMS
 #podman exec rtems_builder rsync -prv /gem_base .
 
 %install
-cp -r gem_base %{buildroot}/
+mv /gem_base %{buildroot}/
 #
 
 #
@@ -67,8 +72,8 @@ rm -rf %{buildroot}
 #prefix is RTEMS_BASE
 %files
 %defattr(-,root,root)
-%dir /gem_base/targetOS/RTEMS/rtems-4.10/
-/gem_base/targetOS/RTEMS/rtems-4.10/*
+%dir /gem_base/targetOS/RTEMS/rtems/%{version}
+/gem_base/targetOS/RTEMS/rtems/%{version}/*
 
 %changelog
 * Thu Oct 08 2020 fkraemer <fkraemer@gemini.edu> 4.10.2-4
