@@ -29,7 +29,7 @@ This is the %{name} RPM.
 %setup -q
 
 %build
-alternatives --set python /usr/bin/python3
+#alternatives --set python /usr/bin/python3
 ./rtems-setup.sh
 
 #mkdir %{_builddir}/tmp
