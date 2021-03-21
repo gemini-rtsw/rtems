@@ -1,7 +1,7 @@
 #!/bin/bash
 export RTEMS_VERSION=5
 export RTEMS_ARCH=powerpc-rtems${RTEMS_VERSION}
-export RTEMS_BSP=beatnik
+export RTEMS_BSPS="mvme2307 beatnik mvme3100"
 export RTEMS_BASE=/gem_base/targetOS/RTEMS/
 export RTEMS_INSTALL_DIR=rtems
 export RTEMS_ROOT=${RTEMS_BASE}/${RTEMS_INSTALL_DIR}/${RTEMS_VERSION}
@@ -30,12 +30,15 @@ git checkout 5
 
 # build and install bsp
 ./bootstrap -c && ./rtems-bootstrap
+
+for bsp in $RTEMS_BSPS; do
 cd ..
-mkdir ${RTEMS_BSP}
-cd ${RTEMS_BSP}
-../rtems/configure --prefix=${RTEMS_ROOT} --target=powerpc-rtems5 --enable-rtemsbsp=${RTEMS_BSP} --enable-posix --enable-c++ --enable-networking --enable-tests
+mkdir ${bsp}
+cd ${bsp}
+../rtems/configure --prefix=${RTEMS_ROOT} --target=powerpc-rtems5 --enable-rtemsbsp=${bsp} --enable-posix --enable-c++ --enable-networking --enable-tests
 make -j8 all
 make install
+done
 
 #cd ../../../bin/
 #./mk-mvme2307-img /gem_base/targetOS/RTEMS/MVME2700/rtems/kernel/mvme2307-legacy/powerpc-rtems5/c/mvme2307/testsuites/sptests/spconsole01.exe /gem_base/fkraemer/spconsole01-legacy.img
