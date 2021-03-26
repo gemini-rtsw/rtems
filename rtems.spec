@@ -1,6 +1,5 @@
 %define name rtems
 %define version 5
-#%%define NVmajor_inst %{name}-4.10
 
 %define release 1
 %define arch noarch
@@ -26,7 +25,6 @@ Source: %{name}-%{version}.tar.gz
 This is the %{name} RPM.
 
 %prep
-#cp Containerfile %{_builddir}
 %setup -q
 
 %build
