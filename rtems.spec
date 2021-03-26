@@ -13,7 +13,7 @@
 
 Name: %{name}%{version}
 Version: %{version}
-Release: 0%{?dist}
+Release: 1%{?dist}
 Summary: RTEMS installation for development on ppc.
 License: Fixme
 Source: %{name}-%{version}.tar.gz
@@ -76,6 +76,9 @@ rm -rf %{buildroot}
 /gem_base/targetOS/RTEMS/rtems/%{version}/*
 
 %changelog
+* Fri Mar 26 2021 Felix Kraemer <fkraemer@gemini.edu> 5-1
+- new package built with tito
+
 * Thu Oct 08 2020 fkraemer <fkraemer@gemini.edu> 4.10.2-4
 - switched to new version/release scheme 
 - switched to new yum repositories
