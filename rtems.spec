@@ -37,8 +37,8 @@ This is the %{name} RPM.
 #podman exec rtems_builder rsync -prv /gem_base .
 
 %install
-mkdir -p %{buildroot}/gem_base/RTEMS/rtems/
-cp -r /gem_base/targetOS/RTEMS/rtems/%{version} %{buildroot}/gem_base/RTEMS/rtems/
+mkdir -p %{buildroot}/gem_base/targetOS/RTEMS/rtems/
+cp -r /gem_base/targetOS/RTEMS/rtems/%{version} %{buildroot}/gem_base/targetOS/RTEMS/rtems/
 #
 
 #
