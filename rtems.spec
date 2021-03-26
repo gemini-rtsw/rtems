@@ -18,8 +18,9 @@ Release: 0%{?dist}
 Summary: RTEMS installation for development on ppc.
 License: Fixme
 Source: %{name}-%{version}.tar.gz
-BuildRequires: yum-utils autoconf automake binutils gcc gcc-c++ gdb make patch bison flex xz unzip ncurses-devel texinfo zlib-devel git 
-BuildRequires: python3 python3-pip python3-setuptools python3-devel texinfo spax
+#BuildRequires: yum-utils autoconf automake binutils gcc gcc-c++ gdb make patch bison flex xz unzip ncurses-devel texinfo zlib-devel git 
+#BuildRequires: glibc-devel libtool pkgconf pkgconf-m4 pkgconf-pkg-config redhat-rpm-config rpm-build asciidoc byacc ctags
+#BuildRequires: python3 python3-pip python3-setuptools python3-devel texinfo spax
 
 %description
 This is the %{name} RPM.
@@ -29,8 +30,8 @@ This is the %{name} RPM.
 %setup -q
 
 %build
-alternatives --set python /usr/bin/python3
-./rtems-setup.sh
+#alternatives --set python /usr/bin/python3
+#./rtems-setup.sh
 
 #mkdir %{_builddir}/tmp
 #podman build -t centos8:RTEMS -f Containerfile
@@ -38,7 +39,8 @@ alternatives --set python /usr/bin/python3
 #podman exec rtems_builder rsync -prv /gem_base .
 
 %install
-mv /gem_base %{buildroot}/
+mkdir -p %{buildroot}/gem_base/RTEMS/rtems/
+cp -r /gem_base/targetOS/RTEMS/rtems/%{version} %{buildroot}/gem_base/RTEMS/rtems/
 #
 
 #
