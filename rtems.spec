@@ -11,9 +11,9 @@
 %global __os_install_post /usr/lib/rpm/brp-ldconfig %{nil}
 %global __os_install_post /usr/lib/rpm/brp-compress %{nil}
 
-Name: %{name}%{version}
+Name: %{name}
 Version: %{version}
-Release: 2%{?dist}
+Release: 0%{?dist}
 Summary: RTEMS installation for development on ppc.
 License: Fixme
 Source: %{name}-%{version}.tar.gz
@@ -76,12 +76,6 @@ rm -rf %{buildroot}
 /gem_base/targetOS/RTEMS/rtems/%{version}/*
 
 %changelog
-* Wed Jul 14 2021 Matt Rippa <mrippa@gemini.edu> 5.1-2
-- new package built with tito
-
-* Wed Jul 14 2021 Matt Rippa <mrippa@gemini.edu> 5.1-1
-- new package built with tito
-
 * Wed Mar 31 2021 Felix Kraemer <fkraemer@gemini.edu> 5-2
 - automated copying to correct repositories without having to rebuild. rtems is
   handled a special case because a built takes hours.
