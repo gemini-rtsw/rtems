@@ -13,7 +13,7 @@
 
 Name: %{name}%{version}
 Version: %{version}
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: RTEMS installation for development on ppc.
 License: Fixme
 Source: %{name}-%{version}.tar.gz
@@ -76,6 +76,9 @@ rm -rf %{buildroot}
 /gem_base/targetOS/RTEMS/rtems/%{version}/*
 
 %changelog
+* Wed Jul 14 2021 Matt Rippa <mrippa@gemini.edu> 5-3
+- 
+
 * Wed Mar 31 2021 Felix Kraemer <fkraemer@gemini.edu> 5-2
 - automated copying to correct repositories without having to rebuild. rtems is
   handled a special case because a built takes hours.
