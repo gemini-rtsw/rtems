@@ -1,5 +1,5 @@
 %define name rtems
-%define version 5.1
+%define version 5
 
 %define release 1
 %define arch noarch
@@ -13,7 +13,7 @@
 
 Name: %{name}
 Version: %{version}
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: RTEMS installation for development on ppc.
 License: Fixme
 Source: %{name}-%{version}.tar.gz
@@ -76,6 +76,9 @@ rm -rf %{buildroot}
 /gem_base/targetOS/RTEMS/rtems/%{version}/*
 
 %changelog
+* Wed Jul 14 2021 Matt Rippa <mrippa@gemini.edu> 5-2
+- new package built with tito
+
 * Wed Jul 14 2021 Matt Rippa <mrippa@gemini.edu> 5.1-1
 - new package built with tito
 
