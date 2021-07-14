@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/bin/bash 
+
+set -x
 export RTEMS_VERSION=5
 export RTEMS_ARCH=powerpc-rtems${RTEMS_VERSION}
 export RTEMS_BSPS="mvme2307 beatnik mvme3100"
@@ -9,6 +11,7 @@ export PATH=${RTEMS_ROOT}/bin:${PATH}
 export RTEMS_MAKEFILE_PATH=${RTEMS_ROOT}/${RTEMS_ARCH}/${RTEMS_BSP}
 export RTEMS_SHARE_PATH=${RTEMS_ROOT}/share/rtems${RTEMS_VERSION}
 
+dnf install -y bison flex texinfo python2-devel spax
 mkdir -p ${RTEMS_BASE}/${RTEMS_INSTALL_DIR}
 cd ${RTEMS_BASE}
 #install rsb and rtems powerpc tools
@@ -36,7 +39,7 @@ cd ..
 mkdir ${bsp}
 cd ${bsp}
 ../rtems/configure --prefix=${RTEMS_ROOT} --target=powerpc-rtems5 --enable-rtemsbsp=${bsp} --enable-posix --enable-c++ --enable-networking --enable-tests
-make -j8 all
+make -j16 all
 make install
 done
 
