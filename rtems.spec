@@ -1,7 +1,4 @@
 %define name rtems
-%define version 5
-
-%define release 1
 %define arch noarch
 %define repository gemdev
 %define checkout %(git log --pretty=format:'%h' -n 1) 
@@ -12,8 +9,8 @@
 %global __os_install_post /usr/lib/rpm/brp-compress %{nil}
 
 Name: %{name}
-Version: %{version}
-Release: 3%{?dist}
+Version: 5.1
+Release: 4%{?dist}
 Summary: RTEMS installation for development on ppc.
 License: Fixme
 Source: %{name}-%{version}.tar.gz
@@ -76,9 +73,9 @@ rm -rf %{buildroot}
 /gem_base/targetOS/RTEMS/rtems/%{version}/*
 
 %changelog
-* Fri Sep 03 2021 MattRippa <matt.rippa@noirlab.edu> 5-3
-- Finish testing and setup for release.
-- Added directory checks to setup script.
+* Fri Sep 03 2021 MattRippa <matt.rippa@noirlab.edu> 5.1-4
+Change version tag to be consisten with vendor. Release tags increment here with tito.
+- 
 
 * Fri Sep 03 2021 MattRippa <matt.rippa@noirlab.edu>
 - Finish testing and setup for release.
