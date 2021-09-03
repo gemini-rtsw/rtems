@@ -1,5 +1,6 @@
 #!/bin/bash 
 
+set -e
 set -x
 export RTEMS_VERSION=5
 export RTEMS_ARCH=powerpc-rtems${RTEMS_VERSION}
@@ -12,13 +13,29 @@ export RTEMS_MAKEFILE_PATH=${RTEMS_ROOT}/${RTEMS_ARCH}/${RTEMS_BSP}
 export RTEMS_SHARE_PATH=${RTEMS_ROOT}/share/rtems${RTEMS_VERSION}
 
 dnf install -y bison flex texinfo python2-devel spax
-mkdir -p ${RTEMS_BASE}/${RTEMS_INSTALL_DIR}
+
+#Need install location
+if [ ! -d ${RTEMS_BASE}/${RTEMS_INSTALL_DIR} ]
+then
+    mkdir -p ${RTEMS_BASE}/${RTEMS_INSTALL_DIR}
+else
+    echo "Install path exists and Ready!" 
+fi
+
 cd ${RTEMS_BASE}
-#install rsb and rtems powerpc tools
-git clone https://github.com/RTEMS/rtems-source-builder.git rsb
+
+if [ ! -d "rsb" ] 
+then
+    #install rsb and rtems powerpc tools
+    git clone https://github.com/RTEMS/rtems-source-builder.git rsb
+else
+    echo "RSB path exists and Ready!" 
+fi
 cd rsb
-git pull --all
+git pull --ff-only --all
 git checkout 5
+
+exit
 cd rtems
 ../source-builder/sb-set-builder --prefix=${RTEMS_ROOT} ${RTEMS_VERSION}/rtems-powerpc
 cd ../../rtems
