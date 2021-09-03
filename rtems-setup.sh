@@ -14,6 +14,8 @@ export RTEMS_SHARE_PATH=${RTEMS_ROOT}/share/rtems${RTEMS_VERSION}
 
 dnf install -y bison flex texinfo python2-devel spax
 
+alternatives --set python /usr/bin/python3
+
 #Need install location
 if [ ! -d ${RTEMS_BASE}/${RTEMS_INSTALL_DIR} ]
 then
@@ -35,7 +37,6 @@ cd rsb
 git pull --ff-only --all
 git checkout 5
 
-exit
 cd rtems
 ../source-builder/sb-set-builder --prefix=${RTEMS_ROOT} ${RTEMS_VERSION}/rtems-powerpc
 cd ../../rtems
