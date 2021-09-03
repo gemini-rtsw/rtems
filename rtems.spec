@@ -13,7 +13,7 @@
 
 Name: %{name}
 Version: %{version}
-Release: 1%{?dist}
+Release: 3%{?dist}
 Summary: RTEMS installation for development on ppc.
 License: Fixme
 Source: %{name}-%{version}.tar.gz
@@ -76,6 +76,14 @@ rm -rf %{buildroot}
 /gem_base/targetOS/RTEMS/rtems/%{version}/*
 
 %changelog
+* Fri Sep 03 2021 MattRippa <matt.rippa@noirlab.edu> 5-3
+- Finish testing and setup for release.
+- Added directory checks to setup script.
+
+* Fri Sep 03 2021 MattRippa <matt.rippa@noirlab.edu>
+- Finish testing and setup for release.
+- Added directory checks to setup script.
+
 * Wed Jul 14 2021 Matt Rippa <mrippa@gemini.edu> 5-1
 - Rebuilt from rtems 5 branch head
 
