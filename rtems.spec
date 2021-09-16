@@ -21,6 +21,13 @@ Source: %{name}-%{version}.tar.gz
 %description
 This is the %{name} RPM.
 
+## If you want to have a devel-package to be generated uncomment the following:
+%package libbsd
+Summary: %{name}-libbsd Package
+Group: Development/Gemini
+%description libbsd
+This includes the libbsd build for %{name}-{%version}.
+
 %prep
 %setup -q
 
@@ -35,7 +42,8 @@ This is the %{name} RPM.
 
 %install
 mkdir -p %{buildroot}/gem_base/targetOS/RTEMS/rtems/
-cp -r /gem_base/targetOS/RTEMS/rtems/%{version} %{buildroot}/gem_base/targetOS/RTEMS/rtems/
+cp -r /gem_base/targetOS/RTEMS/rtems/5 %{buildroot}/gem_base/targetOS/RTEMS/rtems/
+cp -r /gem_base/targetOS/RTEMS/rtems/5-libbsd %{buildroot}/gem_base/targetOS/RTEMS/rtems/
 #
 
 #
@@ -69,8 +77,14 @@ rm -rf %{buildroot}
 #prefix is RTEMS_BASE
 %files
 %defattr(-,root,root)
-%dir /gem_base/targetOS/RTEMS/rtems/%{version}
-/gem_base/targetOS/RTEMS/rtems/%{version}/*
+%dir /gem_base/targetOS/RTEMS/rtems/5
+/gem_base/targetOS/RTEMS/rtems/5/*
+
+#prefix is RTEMS_BASE
+%files libbsd
+%defattr(-,root,root)
+%dir /gem_base/targetOS/RTEMS/rtems/5-libbsd
+/gem_base/targetOS/RTEMS/rtems/5-libbsd/*
 
 %changelog
 * Fri Sep 03 2021 MattRippa <matt.rippa@noirlab.edu> 5.1-4
