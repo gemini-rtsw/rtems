@@ -10,7 +10,7 @@
 
 Name: %{name}
 Version: 5.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: RTEMS installation for development on ppc.
 License: Fixme
 Source: %{name}-%{version}.tar.gz
@@ -87,6 +87,10 @@ rm -rf %{buildroot}
 /gem_base/targetOS/RTEMS/rtems/5-libbsd/*
 
 %changelog
+* Thu Sep 16 2021 Matt Rippa <mrippa@gemini.edu> 5.1-5
+- Includes rtems5 libbsd
+- Builds for rtems5 libbsd
+
 * Fri Sep 03 2021 MattRippa <matt.rippa@noirlab.edu> 5.1-4
 Change version tag to be consisten with vendor. Release tags increment here with tito.
 - 
