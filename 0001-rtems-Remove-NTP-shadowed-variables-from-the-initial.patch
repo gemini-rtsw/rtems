@@ -1,0 +1,35 @@
+From bc7dfd9429b7aff0595080bbeec06cc637f44136 Mon Sep 17 00:00:00 2001
+From: Chris Johns <chrisj@rtems.org>
+Date: Mon, 1 Aug 2022 16:08:50 -1000
+Subject: [PATCH] rtems: Remove NTP shadowed variables from the initialization
+
+- Include the Legacy stack header to pick up the NTP externals
+---
+ modules/libcom/RTEMS/posix/rtems_init.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/modules/libcom/RTEMS/posix/rtems_init.c b/modules/libcom/RTEMS/posix/rtems_init.c
+index 2a394620c..b77e38b7f 100644
+--- a/modules/libcom/RTEMS/posix/rtems_init.c
++++ b/modules/libcom/RTEMS/posix/rtems_init.c
+@@ -59,6 +59,7 @@
+ 
+ #ifdef RTEMS_LEGACY_STACK
+ #include <rtems/rtems_bsdnet.h>
++#include <rtems/bsdnet/servers.h>
+ #include <librtemsNfs.h>
+ #else // libbsd stack
+ #include <rtems/bsd/bsd.h>
+@@ -1091,8 +1092,7 @@ POSIX_Init ( void *argument __attribute__((unused)))
+     if ((cp = getenv("EPICS_TS_NTP_INET")) != NULL)
+         rtems_bsdnet_config.ntp_server[0] = cp;
+ 
+-    int rtems_bsdnet_ntpserver_count = 1;
+-    struct in_addr rtems_bsdnet_ntpserver[rtems_bsdnet_ntpserver_count];
++    rtems_bsdnet_ntpserver_count = 1;
+     memcpy(rtems_bsdnet_ntpserver, rtems_bsdnet_config.ntp_server, sizeof(struct in_addr));
+ 
+     if (rtems_bsdnet_config.network_task_priority == 0)
+-- 
+2.31.1
+

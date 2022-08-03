@@ -1,0 +1,46 @@
+From 990162d88572cedbfaf6f8e2e131c2823fdfa908 Mon Sep 17 00:00:00 2001
+From: Chris Johns <chrisj@rtems.org>
+Date: Mon, 25 Jul 2022 21:27:51 -1000
+Subject: [PATCH] rtems: Close NTP socket
+
+---
+ modules/libcom/RTEMS/epicsNtp.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/modules/libcom/RTEMS/epicsNtp.c b/modules/libcom/RTEMS/epicsNtp.c
+index 760d62610..873ee836f 100644
+--- a/modules/libcom/RTEMS/epicsNtp.c
++++ b/modules/libcom/RTEMS/epicsNtp.c
+@@ -51,6 +51,7 @@ int epicsNtpGetTime(char *ntpIp, struct timespec *now)
+ 
+   // Call up the server using its IP address and port number.
+   if ( connect( sockfd, ( struct sockaddr * ) &serv_addr, sizeof( serv_addr) ) < 0 ) {
++    close( sockfd );
+     perror( "epicsNtpGetTime" );
+     return -1;
+   }
+@@ -58,6 +59,7 @@ int epicsNtpGetTime(char *ntpIp, struct timespec *now)
+   // Send it the NTP packet it wants. If n == -1, it failed.
+   n = write( sockfd, ( char* ) &packet, sizeof( ntp_packet ) );
+   if ( n < 0 ) {
++    close( sockfd );
+     perror( "epicsNtpGetTime" );
+     return -1;
+   }
+@@ -65,10 +67,13 @@ int epicsNtpGetTime(char *ntpIp, struct timespec *now)
+ // Wait and receive the packet back from the server. If n == -1, it failed.
+   n = read( sockfd, ( char* ) &packet, sizeof( ntp_packet ) );
+   if ( n < 0 ) {
++    close( sockfd );
+     perror( "epicsNtpGetTime" );
+     return -1;
+   }
+ 
++  close( sockfd );
++
+   // These two fields contain the time-stamp seconds as the packet left the NTP server.
+   // The number of seconds correspond to the seconds passed since 1900.
+   // ntohl() converts the bit/byte order from the network's to host's "endianness".
+-- 
+2.27.0
+
