@@ -18,3 +18,5 @@ O.*/
 .DS_Store
 /configure/RELEASE.local
 /configure/CONFIG_SITE.local
+docker-compose.yml
+docker-compose.yml
