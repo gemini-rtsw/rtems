@@ -53,4 +53,6 @@ for bsp in $RTEMS_BSPS; do
     make install
 done
 
-
+# apply Chris Johns' patch to let gcc not us -ffunction-section -fdata-section
+popd
+./rtems-5-bsp-flags-clean ${RTEMS_ROOT}
