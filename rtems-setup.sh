@@ -2,18 +2,21 @@
 
 set -e
 set -x
+
+if [ $# -eq 0 ]; then
+    echo "error: no RTEMS installation path on the command line"
+    exit 1
+fi
+
 export RTEMS_VERSION=5
 export RTEMS_ARCH=powerpc-rtems${RTEMS_VERSION}
 export RTEMS_BSPS="mvme2307 beatnik mvme3100"
 #production 
 #export RTEMS_BASE=/gem_base/targetOS/RTEMS/
 #testing
-export RTEMS_BASE=/gem_base/test/fkraemer/targetOS/RTEMS
-export RTEMS_INSTALL_DIR=rtems
-export RTEMS_ROOT=${RTEMS_BASE}/${RTEMS_INSTALL_DIR}/${RTEMS_VERSION}
+export RTEMS_BASE=$1
+export RTEMS_ROOT=${RTEMS_BASE}/${RTEMS_VERSION}
 export PATH=${RTEMS_ROOT}/bin:${PATH}
-export RTEMS_MAKEFILE_PATH=${RTEMS_ROOT}/${RTEMS_ARCH}/${RTEMS_BSP}
-export RTEMS_SHARE_PATH=${RTEMS_ROOT}/share/rtems${RTEMS_VERSION}
 
 ## Uncomment to install dependencies
 #echo "installing bison, flex, texinfo, python2-devel, spax"
@@ -23,9 +26,9 @@ export RTEMS_SHARE_PATH=${RTEMS_ROOT}/share/rtems${RTEMS_VERSION}
 #sudo alternatives --set python /usr/bin/python3
 
 #Need install location
-if [ ! -d ${RTEMS_BASE}/${RTEMS_INSTALL_DIR} ]
+if [ ! -d ${RTEMS_BASE} ]
 then
-    mkdir -p ${RTEMS_BASE}/${RTEMS_INSTALL_DIR}
+    mkdir -p ${RTEMS_BASE}
 else
     echo "Install path exists and Ready!" 
 fi
