@@ -33,6 +33,9 @@ else
     echo "Install path exists and Ready!" 
 fi
 
+git submodule init
+git submodule update
+
 pushd vendor/rtems-source-builder
 
 cd rtems
