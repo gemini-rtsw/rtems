@@ -9,7 +9,7 @@
 %global __os_install_post /usr/lib/rpm/brp-compress %{nil}
 
 Name: %{name}
-Version: 5.1
+Version: 5.0
 Release: 5%{?dist}
 Summary: RTEMS installation for development on ppc.
 License: Fixme
@@ -42,8 +42,11 @@ This includes the libbsd build for %{name}-{%version}.
 
 %install
 mkdir -p %{buildroot}/gem_base/targetOS/RTEMS/rtems/
-cp -r /gem_base/targetOS/RTEMS/rtems/5 %{buildroot}/gem_base/targetOS/RTEMS/rtems/
-cp -r /gem_base/targetOS/RTEMS/rtems/5-libbsd %{buildroot}/gem_base/targetOS/RTEMS/rtems/
+cd %{_builddir}/%{?buildsubdir}
+echo user $USER
+ls -lisah %{buildroot}/gem_base/targetOS/RTEMS/rtems
+sh ./rtems-setup.sh %{buildroot}/gem_base/targetOS/RTEMS/rtems
+#cp -r /gem_base/targetOS/RTEMS/rtems/5-libbsd %{buildroot}/gem_base/targetOS/RTEMS/rtems/
 #
 
 #
@@ -83,8 +86,8 @@ rm -rf %{buildroot}
 #prefix is RTEMS_BASE
 %files libbsd
 %defattr(-,root,root)
-%dir /gem_base/targetOS/RTEMS/rtems/5-libbsd
-/gem_base/targetOS/RTEMS/rtems/5-libbsd/*
+%dir /gem_base/targetOS/RTEMS/rtems/5
+/gem_base/targetOS/RTEMS/rtems/5/*
 
 %changelog
 * Thu Sep 16 2021 Matt Rippa <mrippa@gemini.edu> 5.1-5
