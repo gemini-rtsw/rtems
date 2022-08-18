@@ -21,32 +21,19 @@ Source: %{name}-%{version}.tar.gz
 %description
 This is the %{name} RPM.
 
-## If you want to have a devel-package to be generated uncomment the following:
-%package libbsd
-Summary: %{name}-libbsd Package
-Group: Development/Gemini
-%description libbsd
-This includes the libbsd build for %{name}-{%version}.
-
-%prep
-%setup -q
+#%setup -q
 
 %build
 #alternatives --set python /usr/bin/python3
 #./rtems-setup.sh
 
-#mkdir %{_builddir}/tmp
-#podman build -t centos8:RTEMS -f Containerfile
-#podman run --rm -v %{_builddir}/tmp:/home/user/tmp -w /home/user/tmp  -i -t -d --name rtems_builder centos8:RTEMS
-#podman exec rtems_builder rsync -prv /gem_base .
-
 %install
-mkdir -p %{buildroot}/gem_base/targetOS/RTEMS/rtems/
-cd %{_builddir}/%{?buildsubdir}
-echo user $USER
-ls -lisah %{buildroot}/gem_base/targetOS/RTEMS/rtems
-sh ./rtems-setup.sh %{buildroot}/gem_base/targetOS/RTEMS/rtems
-#cp -r /gem_base/targetOS/RTEMS/rtems/5-libbsd %{buildroot}/gem_base/targetOS/RTEMS/rtems/
+mkdir -p %{buildroot}/gem_base/targetOS/RTEMS/rtems/%{checkout}
+#cd %{_builddir}/%{?buildsubdir}
+#echo user $USER
+#ls -lisah %{buildroot}/gem_base/targetOS/RTEMS/rtems
+#sh ./rtems-setup.sh %{buildroot}/gem_base/targetOS/RTEMS/rtems
+cp -r /gem_base/targetOS/RTEMS/rtems/%{checkout} %{buildroot}/gem_base/targetOS/RTEMS/rtems/
 #
 
 #
@@ -80,109 +67,8 @@ rm -rf %{buildroot}
 #prefix is RTEMS_BASE
 %files
 %defattr(-,root,root)
-%dir /gem_base/targetOS/RTEMS/rtems/5
-/gem_base/targetOS/RTEMS/rtems/5/*
+%dir /gem_base/targetOS/RTEMS/rtems/%{checkout}
+/gem_base/targetOS/RTEMS/rtems/%{checkout}/*
 
-#prefix is RTEMS_BASE
-%files libbsd
-%defattr(-,root,root)
-%dir /gem_base/targetOS/RTEMS/rtems/5
-/gem_base/targetOS/RTEMS/rtems/5/*
 
 %changelog
-* Thu Sep 16 2021 Matt Rippa <mrippa@gemini.edu> 5.1-5
-- Includes rtems5 libbsd
-- Builds for rtems5 libbsd
-
-* Fri Sep 03 2021 MattRippa <matt.rippa@noirlab.edu> 5.1-4
-Change version tag to be consisten with vendor. Release tags increment here with tito.
-- 
-
-* Fri Sep 03 2021 MattRippa <matt.rippa@noirlab.edu>
-- Finish testing and setup for release.
-- Added directory checks to setup script.
-
-* Wed Jul 14 2021 Matt Rippa <mrippa@gemini.edu> 5-1
-- Rebuilt from rtems 5 branch head
-
-* Wed Jul 14 2021 Matt Rippa <mrippa@gemini.edu> 5-2
-- new package built with tito
-
-* Wed Jul 14 2021 Matt Rippa <mrippa@gemini.edu> 5.1-1
-- new package built with tito
-
-* Wed Mar 31 2021 Felix Kraemer <fkraemer@gemini.edu> 5-2
-- automated copying to correct repositories without having to rebuild. rtems is
-  handled a special case because a built takes hours.
-
-* Fri Mar 26 2021 Felix Kraemer <fkraemer@gemini.edu> 5-1
-- new package built with tito
-
-* Thu Oct 08 2020 fkraemer <fkraemer@gemini.edu> 4.10.2-4
-- switched to new version/release scheme 
-- switched to new yum repositories
-
-* Thu Oct 08 2020 fkraemer <fkraemer@gemini.edu>
-- switched to new version/release scheme 
-- switched to new yum repositories
-
-* Thu Oct 08 2020 fkraemer <fkraemer@gemini.edu>
-- switched to new version/release scheme 
-- switched to new yum repositories
-
-* Wed Aug 05 2020 fkraemer <fkraemer@gemini.edu> 4.10.2-1.20200805054114c4c8e
-- Release tag enriched with hour and minute (%%H%%M) to be able to build
-  several RPMs a day without messing up the repo (fkraemer@gemini.edu)
-
-* Wed Jul 22 2020 fkraemer <fkraemer@gemini.edu> 4.10.2-1.20200722b2e2ccb
-- corrected release tag again (fkraemer@gemini.edu)
-
-* Wed Jul 22 2020 fkraemer <fkraemer@gemini.edu> 4.10.2-1.20200722.498c0cb
-- changed release tag (fkraemer@gemini.edu)
-
-* Wed Jul 22 2020 fkraemer <fkraemer@gemini.edu> 4.10.2-1.202007227b25acd
-- changed Release tag in specfile (fkraemer@gemini.edu)
-
-* Wed Jul 22 2020 fkraemer <fkraemer@gemini.edu> 4.10.2-1.20200722.git2c319e4
-- added binaries, also (fkraemer@gemini.edu)
-- fix cp gem_base (fkraemer@gemini.edu)
-- fix test (fkraemer@gemini.edu)
-
-* Wed Jul 22 2020 fkraemer <fkraemer@gemini.edu> 4.10.2-1.20200722.git02dbf3d
-- some tests (fkraemer@gemini.edu)
-
-* Wed Jul 22 2020 fkraemer <fkraemer@gemini.edu> 4.10.2-1.20200722.git9c180b0
-- added gem_base dir for now (fkraemer@gemini.edu)
-
-* Wed Jul 22 2020 fkraemer <fkraemer@gemini.edu> 4.10.2-1.20200722.git91b595d
-- 
-
-* Wed Jul 22 2020 fkraemer <fkraemer@gemini.edu> 4.10.2-1.20200722.gitcecac5c
-- changed release tag (fkraemer@gemini.edu)
-- basic rtems rpm packager wich expects a complete rtems installation under
-  /gem_base which is rsynced (options -rp) to gem_base in the specfiles
-  directory (fkraemer@gemini.edu)
-- small adjustments (fkraemer@gemini.edu)
-- some adjustments (fkraemer@gemini.edu)
-- some small adjustments (fkraemer@gemini.edu)
-- build container first (fkraemer@gemini.edu)
-- some adjustments to specfile (fkraemer@gemini.edu)
-- added podman dependency (fkraemer@gemini.edu)
-
-* Wed Jul 22 2020 fkraemer <fkraemer@gemini.edu>
-- basic rtems rpm packager wich expects a complete rtems installation under
-  /gem_base which is rsynced (options -rp) to gem_base in the specfiles
-  directory (fkraemer@gemini.edu)
-- small adjustments (fkraemer@gemini.edu)
-- some adjustments (fkraemer@gemini.edu)
-- some small adjustments (fkraemer@gemini.edu)
-- build container first (fkraemer@gemini.edu)
-- some adjustments to specfile (fkraemer@gemini.edu)
-- added podman dependency (fkraemer@gemini.edu)
-
-* Tue Jul 21 2020 fkraemer <fkraemer@gemini.edu> 4.10.2-1
-- new package built with tito
-
-## Write changes here, e.g.
-* Tue Jun 30 2020 Matt Rippa <mrippa@gemini.edu> 4.10.2-1
-- initial release

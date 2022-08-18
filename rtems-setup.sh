@@ -1,12 +1,8 @@
 #!/bin/bash 
+checkout=$(git log --pretty=format:'%h' -n 1)
 
 set -e
 set -x
-
-if [ $# -eq 0 ]; then
-    echo "error: no RTEMS installation path on the command line"
-    exit 1
-fi
 
 export RTEMS_VERSION=5
 export RTEMS_ARCH=powerpc-rtems${RTEMS_VERSION}
@@ -14,7 +10,12 @@ export RTEMS_BSPS="mvme2307 beatnik mvme3100"
 #production 
 #export RTEMS_BASE=/gem_base/targetOS/RTEMS/
 #testing
-export RTEMS_BASE=$1
+if [ $# -eq 0 ]; then
+    echo "no RTEMS installation path on the command line, using default"
+    export RTEMS_BASE=/gem_base/targetOS/RTEMS/rtems/${checkout}
+else
+    export RTEMS_BASE=$1
+fi
 export RTEMS_ROOT=${RTEMS_BASE}/${RTEMS_VERSION}
 export PATH=${RTEMS_ROOT}/bin:${PATH}
 
