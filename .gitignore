@@ -19,3 +19,5 @@ O.*/
 /configure/RELEASE.local
 /configure/CONFIG_SITE.local
 docker-compose.yml
+/rtems-source-builder
+/rtems-deployment

@@ -4,36 +4,34 @@ checkout=$(git log --pretty=format:'%h' -n 1)
 set -e
 set -x
 
+## please edit to your needs
+# RTEMS vesion
 export RTEMS_VERSION=5
+# commit hashes
+export RTEMS_SOURCE_BUILDER_REVISION=369b60a
+export RTEMS_DEPLOYMENT_REVISION=8c282ef
+# either legacy or libbsd
+export RTEMS_LEGACY_OR_LIBBSD="legacy"
 
-if [ $# -lt 3 ]; then
-echo "usage: $0 <RSB commit hash> <rtems-deployment commit hash> <legacy|libbsd> [<RTEMS install dir>]"
-echo "too less arguments, exiting.."
-exit 1
-elif [ $# -eq 3 ]; then
-    echo "no RTEMS installation path on the command line, using default"
-    export RTEMS_BASE=/gem_base/targetOS/RTEMS/rtems
-else
-    export RTEMS_BASE=$1
-fi
+export RTEMS_BASE=/gem_base/targetOS/RTEMS/rtems
+
 export RTEMS_ROOT=${RTEMS_BASE}/${RTEMS_VERSION}
 
 rm -rf rtems-source-builder rtems-deployment
 
 git clone git://git.rtems.org/rtems-source-builder.git
 cd rtems-source-builder/
-git checkout $1
+git checkout ${RTEMS_SOURCE_BUILDER_REVISION}
 cd ../
 git clone https://git.rtems.org/chrisj/rtems-deployment.git
 cd rtems-deployment
-git checkout $2
-sed -i "s#^%define\ name\ .*#%define name rtems#" pkg/rpm.spec.in
+git checkout ${RTEMS_DEPLOYMENT_REVISION}
+sed -i -e "s#^%define\ name\ .*#%define name rtems#" \
+       -e "s#^Release:\ .*#Release: ${checkout}.%{rsb_revision}%{?dist}#" pkg/rpm.spec.in
 mkdir -p out/buildroot/BUILD
 mkdir -p out/buildroot/RPMS/x86_64
 ./waf configure --prefix=${RTEMS_ROOT} --rsb=../rtems-source-builder --build=gemini
 ./waf rpmspec
 
-cd ../
-cp rtems-deployment/out/gemini/gemini-powerpc-$3-bsps.spec rtems.spec
-
+rpmbuild -bb out/gemini/gemini-powerpc-${RTEMS_LEGACY_OR_LIBBSD}-bsps.spec
 #./rtems-5-bsp-flags-clean ${RTEMS_ROOT}
