@@ -1,12 +1,4 @@
-[submodule "sources/rtems-source-builder"]
-	path = vendor/rtems-source-builder
-	url = https://github.com/RTEMS/rtems-source-builder.git
-	branch = 5
-[submodule "sources/rtems"]
-	path = vendor/rtems
-	url = git://git.rtems.org/rtems.git
-	branch = 5
 [submodule "gem-ci"]
 	path = gem-ci
 	url = ../../gem-ci
-	branch = unstable/2022q1
+	branch = unstable/2022q3

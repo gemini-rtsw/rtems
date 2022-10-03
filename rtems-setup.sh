@@ -5,61 +5,35 @@ set -e
 set -x
 
 export RTEMS_VERSION=5
-export RTEMS_ARCH=powerpc-rtems${RTEMS_VERSION}
-export RTEMS_BSPS="mvme2307 beatnik mvme3100"
-#production 
-#export RTEMS_BASE=/gem_base/targetOS/RTEMS/
-#testing
-if [ $# -eq 0 ]; then
+
+if [ $# -lt 3 ]; then
+echo "usage: $0 <RSB commit hash> <rtems-deployment commit hash> <legacy|libbsd> [<RTEMS install dir>]"
+echo "too less arguments, exiting.."
+exit 1
+elif [ $# -eq 3 ]; then
     echo "no RTEMS installation path on the command line, using default"
-    export RTEMS_BASE=/gem_base/targetOS/RTEMS/rtems/${checkout}
+    export RTEMS_BASE=/gem_base/targetOS/RTEMS/rtems
 else
     export RTEMS_BASE=$1
 fi
 export RTEMS_ROOT=${RTEMS_BASE}/${RTEMS_VERSION}
-export PATH=${RTEMS_ROOT}/bin:${PATH}
 
-## Uncomment to install dependencies
-#echo "installing bison, flex, texinfo, python2-devel, spax"
-#echo "sudo permissions needed..."
-#sudo dnf install -y bison flex texinfo python2-devel spax
-#
-#sudo alternatives --set python /usr/bin/python3
+rm -rf rtems-source-builder rtems-deployment
 
-#Need install location
-if [ ! -d ${RTEMS_BASE} ]
-then
-    mkdir -p ${RTEMS_BASE}
-else
-    echo "Install path exists and Ready!" 
-fi
+git clone git://git.rtems.org/rtems-source-builder.git
+cd rtems-source-builder/
+git checkout $1
+cd ../
+git clone https://git.rtems.org/chrisj/rtems-deployment.git
+cd rtems-deployment
+git checkout $2
+sed -i "s#^%define\ name\ .*#%define name rtems#" pkg/rpm.spec.in
+mkdir -p out/buildroot/BUILD
+mkdir -p out/buildroot/RPMS/x86_64
+./waf configure --prefix=${RTEMS_ROOT} --rsb=../rtems-source-builder --build=gemini
+./waf rpmspec
 
-git submodule init
-git submodule update
+cd ../
+cp rtems-deployment/out/gemini/gemini-powerpc-$3-bsps.spec rtems.spec
 
-pushd vendor/rtems-source-builder
-
-cd rtems
-../source-builder/sb-set-builder --prefix=${RTEMS_ROOT} 5/rtems-powerpc
-
-# building kernel
-popd
-pushd vendor/rtems
-
-# build and install bsp
-./bootstrap -c && ./rtems-bootstrap
-
-# For building libbsd we need to use the disable-networking flag
-# For building legacy we need to use the enable-networking flag
-for bsp in $RTEMS_BSPS; do
-    cd ..
-    mkdir ${bsp}
-    cd ${bsp}
-    ../rtems/configure --prefix=${RTEMS_ROOT} --target=powerpc-rtems5 --enable-rtemsbsp=${bsp}  --enable-posix --enable-c++ --enable-networking --enable-tests
-    make -j16 all
-    make install
-done
-
-# apply Chris Johns' patch to let gcc not us -ffunction-section -fdata-section
-popd
-./rtems-5-bsp-flags-clean ${RTEMS_ROOT}
+#./rtems-5-bsp-flags-clean ${RTEMS_ROOT}
