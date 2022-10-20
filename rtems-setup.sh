@@ -9,7 +9,7 @@ set -x
 export RTEMS_VERSION=5
 # commit hashes
 export RTEMS_SOURCE_BUILDER_REVISION=369b60a
-export RTEMS_DEPLOYMENT_REVISION=8c282ef
+export RTEMS_DEPLOYMENT_REVISION=d7baa5a
 # either legacy or libbsd
 export RTEMS_LEGACY_OR_LIBBSD="legacy"
 
@@ -26,11 +26,12 @@ cd ../
 git clone https://git.rtems.org/chrisj/rtems-deployment.git
 cd rtems-deployment
 git checkout ${RTEMS_DEPLOYMENT_REVISION}
-sed -i -e "s#^%define\ name\ .*#%define name rtems#" \
-       -e "s#^Release:\ .*#Release: ${checkout}.%{rsb_revision}%{?dist}#" pkg/rpm.spec.in
+#sed -i -e "s#^%define\ name\ .*#%define name rtems#" \
+#       -e "s#^Release:\ .*#Release: ${checkout}.%{rsb_revision}%{?dist}#" pkg/rpm.spec.in
 mkdir -p out/buildroot/BUILD
 mkdir -p out/buildroot/RPMS/x86_64
-./waf configure --prefix=${RTEMS_ROOT} --rsb=../rtems-source-builder --build=gemini
+./waf configure --prefix=${RTEMS_ROOT} --rsb=../rtems-source-builder --rpm-config=../gemini-config.ini --rpm-config-value=gemini_version=${checkout}
+#./waf configure --prefix=${RTEMS_ROOT} --rsb=../rtems-source-builder --build=gemini
 ./waf rpmspec
 
 rpmbuild -bb out/gemini/gemini-powerpc-${RTEMS_LEGACY_OR_LIBBSD}-bsps.spec
