@@ -8,7 +8,7 @@ set -x
 # RTEMS vesion
 export RTEMS_VERSION=5
 # commit hashes
-export RTEMS_SOURCE_BUILDER_REVISION=369b60a
+export RTEMS_SOURCE_BUILDER_REVISION=3dc0431
 export RTEMS_DEPLOYMENT_REVISION=d7baa5a
 # either legacy or libbsd
 export RTEMS_LEGACY_OR_LIBBSD="legacy"
