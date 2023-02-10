@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 checkout=$(git log --pretty=format:'%h' -n 1)
 
 set -e
@@ -10,11 +10,13 @@ export RTEMS_VERSION=5
 
 ## There can be either a RTEMS_RELEASE or RTEMS_REVISION (i.e. specific git commit hash)
 ## RTEMS_RELEASE has precedence, meaning if set, this will be build
-export RTEMS_RELEASE=5.2
+export RTEMS_RELEASE=5.3
 ## commit hashes
 ## comment out RTEMS_RELEASE if you want to build from git revision and
 ## specify the revision yhou want to be checked out
 #export RTEMS_SOURCE_BUILDER_REVISION=3dc0431
+
+export RTEMS_RELEASE_URL=https://ftp.rtems.org/pub/rtems/releases
 
 # RTEMS-deploymeny revision (i.e. git hash)
 export RTEMS_DEPLOYMENT_REVISION=d7baa5a
@@ -23,12 +25,40 @@ export RTEMS_LEGACY_OR_LIBBSD="legacy"
 
 export RTEMS_BASE=/gem_base/targetOS/RTEMS/rtems
 
+# options
+while getopts 'V:R:u:b:' OPTION
+do
+	case "$OPTION" in
+		V)
+			RTEMS_VERSION="$OPTARG"
+			;;
+		R)
+			RTEMS_RELEASE="$OPTARG"
+			;;
+		G)
+			unset RTEMS_RELEASE
+			;;
+		u)
+			RTEMS_RELEASE_URL="$OPTARG"
+			;;
+		b)
+			RTEMS_BASE="$OPTARG"
+			;;
+		?)
+			echo "Usage: $(basename $0) [-G] [-V RTEMS version] [-R RTEMS release] [-u RTEMS release URL] [-b RTEMS base]"
+			echo " where:"
+			echo "  -G : Use the git version branch and not a release"
+			exit 1
+			;;
+	esac
+done
+
 export RTEMS_ROOT=${RTEMS_BASE}/${RTEMS_VERSION}
 
 rm -rf rtems-source-builder rtems-deployment
 
 if [ "$RTEMS_RELEASE" != "" ]; then
-	curl https://ftp.rtems.org/pub/rtems/releases/${RTEMS_VERSION}/${RTEMS_RELEASE}/sources/rtems-source-builder-${RTEMS_RELEASE}.tar.xz | tar xJf -
+	curl ${RTEMS_RELEASE_URL}/${RTEMS_VERSION}/${RTEMS_RELEASE}/sources/rtems-source-builder-${RTEMS_RELEASE}.tar.xz | tar xJf -
 	mv rtems-source-builder-${RTEMS_RELEASE} rtems-source-builder
 else
 	git clone git://git.rtems.org/rtems-source-builder.git
