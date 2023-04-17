@@ -78,4 +78,3 @@ mkdir -p out/buildroot/RPMS/x86_64
 ./waf rpmspec
 
 rpmbuild -bb out/gemini/gemini-powerpc-${RTEMS_LEGACY_OR_LIBBSD}-bsps.spec
-#./rtems-5-bsp-flags-clean ${RTEMS_ROOT}
