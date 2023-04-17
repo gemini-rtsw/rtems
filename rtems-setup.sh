@@ -6,20 +6,20 @@ set -x
 
 ## please edit to your needs
 # RTEMS vesion
-export RTEMS_VERSION=5
+export RTEMS_VERSION=6
 
 ## There can be either a RTEMS_RELEASE or RTEMS_REVISION (i.e. specific git commit hash)
 ## RTEMS_RELEASE has precedence, meaning if set, this will be build
-export RTEMS_RELEASE=5.3
+#export RTEMS_RELEASE=6.0
 ## commit hashes
 ## comment out RTEMS_RELEASE if you want to build from git revision and
 ## specify the revision yhou want to be checked out
-#export RTEMS_SOURCE_BUILDER_REVISION=3dc0431
+export RTEMS_SOURCE_BUILDER_REVISION=ae00c59541f21d8c459a33774efade80085c9b4a
 
 export RTEMS_RELEASE_URL=https://ftp.rtems.org/pub/rtems/releases
 
 # RTEMS-deploymeny revision (i.e. git hash)
-export RTEMS_DEPLOYMENT_REVISION=d7baa5a
+export RTEMS_DEPLOYMENT_REVISION=77e4d11df2de7f592c03301fc2d5ff070e99773f
 ## either legacy or libbsd
 export RTEMS_LEGACY_OR_LIBBSD="legacy"
 
