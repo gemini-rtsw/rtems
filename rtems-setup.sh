@@ -19,7 +19,7 @@ export RTEMS_SOURCE_BUILDER_REVISION=ae00c59541f21d8c459a33774efade80085c9b4a
 export RTEMS_RELEASE_URL=https://ftp.rtems.org/pub/rtems/releases
 
 # RTEMS-deploymeny revision (i.e. git hash)
-export RTEMS_DEPLOYMENT_REVISION=77e4d11df2de7f592c03301fc2d5ff070e99773f
+export RTEMS_DEPLOYMENT_REVISION=b71866a9485ecfee8a3fc4684b280c20988e4405
 ## either legacy or libbsd
 export RTEMS_LEGACY_OR_LIBBSD="legacy"
 
