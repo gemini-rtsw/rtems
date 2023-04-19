@@ -77,4 +77,5 @@ mkdir -p out/buildroot/RPMS/x86_64
 #./waf configure --prefix=${RTEMS_ROOT} --rsb=../rtems-source-builder --build=gemini
 ./waf rpmspec
 
-rpmbuild -bb out/gemini/gemini-powerpc-${RTEMS_LEGACY_OR_LIBBSD}-bsps.spec
+#rpmbuild -bb out/gemini/gemini-powerpc-${RTEMS_LEGACY_OR_LIBBSD}-bsps.spec
+rpmbuild -bb out/gemini/gemini-powerpc-net-${RTEMS_LEGACY_OR_LIBBSD}-bsps.spec
