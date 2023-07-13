@@ -14,7 +14,7 @@ export RTEMS_VERSION=6
 ## commit hashes
 ## comment out RTEMS_RELEASE if you want to build from git revision and
 ## specify the revision yhou want to be checked out
-export RTEMS_SOURCE_BUILDER_REVISION=3c8c2ce38a8fe0a622f88fb3422d1f8fa609609b
+export RTEMS_SOURCE_BUILDER_REVISION=8e568b2ca3489d6bfa48e1d29618ea9b48a5b408
 
 export RTEMS_RELEASE_URL=https://ftp.rtems.org/pub/rtems/releases
 
