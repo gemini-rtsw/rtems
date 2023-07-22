@@ -8,13 +8,15 @@ set -x
 # RTEMS vesion
 export RTEMS_VERSION=6
 
-## There can be either a RTEMS_RELEASE or RTEMS_REVISION (i.e. specific git commit hash)
+## There can be either a RTEMS_RELEASE or RTEMS_SOURCE_BUILDER_REVISION 
+## (i.e. specific git commit hash).
 ## RTEMS_RELEASE has precedence, meaning if set, this will be build
 #export RTEMS_RELEASE=6.0
-## commit hashes
+
+## RSB commit hashes
 ## comment out RTEMS_RELEASE if you want to build from git revision and
-## specify the revision yhou want to be checked out
-export RTEMS_SOURCE_BUILDER_REVISION=8e568b2ca3489d6bfa48e1d29618ea9b48a5b408
+## specify the revision you want to be checked out
+export RTEMS_SOURCE_BUILDER_REVISION=7e0079bb0448eb5de80917b5a225350d5e0d7825
 
 export RTEMS_RELEASE_URL=https://ftp.rtems.org/pub/rtems/releases
 
