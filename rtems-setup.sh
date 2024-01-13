@@ -16,12 +16,12 @@ export RTEMS_VERSION=6
 ## RSB commit hashes
 ## comment out RTEMS_RELEASE if you want to build from git revision and
 ## specify the revision you want to be checked out
-export RTEMS_SOURCE_BUILDER_REVISION=fc4426c956c13b7e5af3c1eb0f17ef4c71ba8a81
+export RTEMS_SOURCE_BUILDER_REVISION=bddb17c9d20f1c00c550b11b387dd915aa5c29de
 
 export RTEMS_RELEASE_URL=https://ftp.rtems.org/pub/rtems/releases
 
 # RTEMS-deploymeny revision (i.e. git hash)
-export RTEMS_DEPLOYMENT_REVISION=039f55877c028de004bcfc58ae88b589357b6a73
+export RTEMS_DEPLOYMENT_REVISION=9494f267cf8d77465fac78e2026ded25267ebec1
 ## either legacy or libbsd
 export RTEMS_LEGACY_OR_LIBBSD="legacy"
 
@@ -75,9 +75,18 @@ git checkout ${RTEMS_DEPLOYMENT_REVISION}
 #       -e "s#^Release:\ .*#Release: ${checkout}.%{rsb_revision}%{?dist}#" pkg/rpm.spec.in
 mkdir -p out/buildroot/BUILD
 mkdir -p out/buildroot/RPMS/x86_64
-./waf configure --prefix=${RTEMS_ROOT} --rsb=../rtems-source-builder --rpm-config=../gemini-config.ini --rpm-config-value=gemini_version=${checkout}
+## commenting out for build for EPICS core devs
+# ./waf configure --prefix=${RTEMS_ROOT} --rsb=../rtems-source-builder --rpm-config=../gemini-config.ini --rpm-config-value=gemini_version=${checkout}
+## for EPICS core devs
+./waf configure --prefix=${RTEMS_ROOT} --rsb=../rtems-source-builder 
 #./waf configure --prefix=${RTEMS_ROOT} --rsb=../rtems-source-builder --build=gemini
 ./waf rpmspec
 
 #rpmbuild -bb out/gemini/gemini-powerpc-${RTEMS_LEGACY_OR_LIBBSD}-bsps.spec
-rpmbuild -bb out/gemini/gemini-powerpc-net-${RTEMS_LEGACY_OR_LIBBSD}-bsps.spec
+
+## commenting out in favor of providing a container for epics core devs
+#rpmbuild -bb out/gemini/gemini-powerpc-net-${RTEMS_LEGACY_OR_LIBBSD}-bsps.spec
+
+## provide support for initial set of EPICS base BSPs for EPICS core devs
+rpmbuild -bb out/epics/net-${RTEMS_LEGACY_OR_LIBBSD}-bsps.spec
+#rpmbuild -bb out/epics/net-legacy-bsps.spec
