@@ -1,4 +1,4 @@
 [submodule "gem-ci"]
 	path = gem-ci
 	url = ../../gem-ci
-	branch = unstable/fkraemer-issue58
+	branch = unstable/fkraemer-issue60

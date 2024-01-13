@@ -75,18 +75,20 @@ git checkout ${RTEMS_DEPLOYMENT_REVISION}
 #       -e "s#^Release:\ .*#Release: ${checkout}.%{rsb_revision}%{?dist}#" pkg/rpm.spec.in
 mkdir -p out/buildroot/BUILD
 mkdir -p out/buildroot/RPMS/x86_64
-## commenting out for build for EPICS core devs
-# ./waf configure --prefix=${RTEMS_ROOT} --rsb=../rtems-source-builder --rpm-config=../gemini-config.ini --rpm-config-value=gemini_version=${checkout}
-## for EPICS core devs
-./waf configure --prefix=${RTEMS_ROOT} --rsb=../rtems-source-builder 
+
+## comment out for build for EPICS core devs
+./waf configure --prefix=${RTEMS_ROOT} --rsb=../rtems-source-builder --rpm-config=../gemini-config.ini --rpm-config-value=gemini_version=${checkout}
+
+## .. and use this one for EPICS core devs
+#./waf configure --prefix=${RTEMS_ROOT} --rsb=../rtems-source-builder 
 #./waf configure --prefix=${RTEMS_ROOT} --rsb=../rtems-source-builder --build=gemini
 ./waf rpmspec
 
 #rpmbuild -bb out/gemini/gemini-powerpc-${RTEMS_LEGACY_OR_LIBBSD}-bsps.spec
 
 ## commenting out in favor of providing a container for epics core devs
-#rpmbuild -bb out/gemini/gemini-powerpc-net-${RTEMS_LEGACY_OR_LIBBSD}-bsps.spec
+rpmbuild -bb out/gemini/gemini-powerpc-net-${RTEMS_LEGACY_OR_LIBBSD}-bsps.spec
 
 ## provide support for initial set of EPICS base BSPs for EPICS core devs
-rpmbuild -bb out/epics/net-${RTEMS_LEGACY_OR_LIBBSD}-bsps.spec
+#rpmbuild -bb out/epics/net-${RTEMS_LEGACY_OR_LIBBSD}-bsps.spec
 #rpmbuild -bb out/epics/net-legacy-bsps.spec
