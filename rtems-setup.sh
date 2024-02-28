@@ -68,6 +68,7 @@ else
 	git checkout ${RTEMS_SOURCE_BUILDER_REVISION}
     
     # temporary patch to increase FD_SETSIZE to 256, will be upstream soon
+    # FIXME: please check if still neccessary
     git apply ../0001-rtems-newlib-Increase-FD_SETSIZE-to-256.patch
 
 	cd ../
