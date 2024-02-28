@@ -1,0 +1,27 @@
+From 195077d46fe6065401122ef2061351eca0e93a72 Mon Sep 17 00:00:00 2001
+From: Chris Johns <chrisj@rtems.org>
+Date: Wed, 21 Feb 2024 10:29:04 +1100
+Subject: [PATCH] rtems/newlib: Increase FD_SETSIZE to 256
+
+---
+ rtems/config/tools/rtems-gcc-13.2-newlib-head.cfg | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/rtems/config/tools/rtems-gcc-13.2-newlib-head.cfg b/rtems/config/tools/rtems-gcc-13.2-newlib-head.cfg
+index a8d729f..080476e 100644
+--- a/rtems/config/tools/rtems-gcc-13.2-newlib-head.cfg
++++ b/rtems/config/tools/rtems-gcc-13.2-newlib-head.cfg
+@@ -13,6 +13,10 @@
+ %hash sha512 newlib-%{newlib_version}.tar.gz \
+   ia0ce+bdENUO3qYj00jrZB8FjSejmTWuRqEdNE8nI2llf30mh8leUn5fCoHB0Oa7rRVBjEu3n0F12ZK9skuegQ==
+ 
++%patch add newlib %{rtems_devel_ticket}/4993/0001-RTEMS-Increase-FS_SETSIZE-to-256-bits.patch
++%hash sha512 0001-RTEMS-Increase-FS_SETSIZE-to-256-bits.patch \
++         h715gWq5OBedJCpF8tnnn5fky+M3V0wIyiBqVJu9n4jS6uH6OgGexWCIBA7S0l+F+XSrvEO2HbOP3gKWXXifSQ==
++
+ %define with_threads 1
+ %define with_plugin 0
+ %define with_iconv 1
+-- 
+2.42.0
+

@@ -16,7 +16,7 @@ export RTEMS_VERSION=6
 ## RSB commit hashes
 ## comment out RTEMS_RELEASE if you want to build from git revision and
 ## specify the revision you want to be checked out
-export RTEMS_SOURCE_BUILDER_REVISION=bddb17c9d20f1c00c550b11b387dd915aa5c29de
+export RTEMS_SOURCE_BUILDER_REVISION=07ba8d5f8f514b70ed6908c73d2dc5562f4723e1
 
 export RTEMS_RELEASE_URL=https://ftp.rtems.org/pub/rtems/releases
 
@@ -66,6 +66,10 @@ else
 	git clone git://git.rtems.org/rtems-source-builder.git
 	cd rtems-source-builder/
 	git checkout ${RTEMS_SOURCE_BUILDER_REVISION}
+    
+    # temporary patch to increase FD_SETSIZE to 256, will be upstream soon
+    git apply ../0001-rtems-newlib-Increase-FD_SETSIZE-to-256.patch
+
 	cd ../
 fi
 git clone https://git.rtems.org/chrisj/rtems-deployment.git
