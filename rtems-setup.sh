@@ -11,7 +11,7 @@ export RTEMS_VERSION=6
 ## There can be either a RTEMS_RELEASE or RTEMS_SOURCE_BUILDER_REVISION 
 ## (i.e. specific git commit hash).
 ## RTEMS_RELEASE has precedence, meaning if set, this will be build
-#export RTEMS_RELEASE=6.0
+export RTEMS_RELEASE=6.1-rc2
 
 ## RSB commit hashes
 ## comment out RTEMS_RELEASE if you want to build from git revision and
@@ -59,7 +59,10 @@ export RTEMS_ROOT=${RTEMS_BASE}/${RTEMS_VERSION}
 
 rm -rf rtems-source-builder rtems-deployment
 
-if [ "$RTEMS_RELEASE" != "" ]; then
+if [[ "$RTEMS_RELEASE" == *"rc"* ]]; then
+	curl ${RTEMS_RELEASE_URL}/${RTEMS_VERSION}/rc/${RTEMS_RELEASE}/sources/rtems-source-builder-${RTEMS_RELEASE}.tar.xz | tar xJf -
+	mv rtems-source-builder-${RTEMS_RELEASE} rtems-source-builder
+elif [ "$RTEMS_RELEASE" != "" ]; then
 	curl ${RTEMS_RELEASE_URL}/${RTEMS_VERSION}/${RTEMS_RELEASE}/sources/rtems-source-builder-${RTEMS_RELEASE}.tar.xz | tar xJf -
 	mv rtems-source-builder-${RTEMS_RELEASE} rtems-source-builder
 else
