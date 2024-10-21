@@ -16,12 +16,12 @@ export RTEMS_RELEASE=6.1-rc2
 ## RSB commit hashes
 ## comment out RTEMS_RELEASE if you want to build from git revision and
 ## specify the revision you want to be checked out
-export RTEMS_SOURCE_BUILDER_REVISION=07ba8d5f8f514b70ed6908c73d2dc5562f4723e1
+export RTEMS_SOURCE_BUILDER_REVISION=989ec6342f410f21e6585e4828a4c5f4f8da5e83
 
 export RTEMS_RELEASE_URL=https://ftp.rtems.org/pub/rtems/releases
 
 # RTEMS-deploymeny revision (i.e. git hash)
-export RTEMS_DEPLOYMENT_REVISION=9494f267cf8d77465fac78e2026ded25267ebec1
+export RTEMS_DEPLOYMENT_REVISION=76552d56975aceae36ec68e890c440fb7ef74228
 ## either legacy or libbsd
 export RTEMS_LEGACY_OR_LIBBSD="legacy"
 
@@ -66,8 +66,8 @@ elif [ "$RTEMS_RELEASE" != "" ]; then
 	curl ${RTEMS_RELEASE_URL}/${RTEMS_VERSION}/${RTEMS_RELEASE}/sources/rtems-source-builder-${RTEMS_RELEASE}.tar.xz | tar xJf -
 	mv rtems-source-builder-${RTEMS_RELEASE} rtems-source-builder
 else
-	git clone git://git.rtems.org/rtems-source-builder.git
-	cd rtems-source-builder/
+	git clone https://gitlab.rtems.org/rtems/tools/rtems-source-builder.git
+	cd rtems-source-builder
 	git checkout ${RTEMS_SOURCE_BUILDER_REVISION}
     
     # temporary patch to increase FD_SETSIZE to 256, will be upstream soon
@@ -76,7 +76,8 @@ else
 
 	cd ../
 fi
-git clone https://git.rtems.org/chrisj/rtems-deployment.git
+
+git clone https://gitlab.rtems.org/rtems/tools/rtems-deployment.git
 cd rtems-deployment
 git checkout ${RTEMS_DEPLOYMENT_REVISION}
 #sed -i -e "s#^%define\ name\ .*#%define name rtems#" \
@@ -85,11 +86,13 @@ mkdir -p out/buildroot/BUILD
 mkdir -p out/buildroot/RPMS/x86_64
 
 ## comment out for build for EPICS core devs
+../rtems-source-builder/source-builder/sb-set-builder --url=https://ftp.rtems.org/pub/rtems/cache/rsb/main 6/rtems-powerpc 
 ./waf configure --prefix=${RTEMS_ROOT} --rsb=../rtems-source-builder --rpm-config=../gemini-config.ini --rpm-config-value=gemini_version=${checkout}
 
 ## .. and use this one for EPICS core devs
-#./waf configure --prefix=${RTEMS_ROOT} --rsb=../rtems-source-builder 
-#./waf configure --prefix=${RTEMS_ROOT} --rsb=../rtems-source-builder --build=gemini
+#./waf configure --prefix=${RTEMS_ROOT} --rsb=../rtems-source-builder/source-builder
+#./waf configure --prefix=${RTEMS_ROOT} --rsb=../rtems-source-builder/source-builder --build=gemini
+
 ./waf rpmspec
 
 #rpmbuild -bb out/gemini/gemini-powerpc-${RTEMS_LEGACY_OR_LIBBSD}-bsps.spec
