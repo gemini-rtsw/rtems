@@ -11,7 +11,7 @@ export RTEMS_VERSION=6
 ## There can be either a RTEMS_RELEASE or RTEMS_SOURCE_BUILDER_REVISION 
 ## (i.e. specific git commit hash).
 ## RTEMS_RELEASE has precedence, meaning if set, this will be build
-export RTEMS_RELEASE=6.1-rc2
+export RTEMS_RELEASE=6.1-rc4
 
 ## RSB commit hashes
 ## comment out RTEMS_RELEASE if you want to build from git revision and
@@ -72,7 +72,7 @@ else
     
     # temporary patch to increase FD_SETSIZE to 256, will be upstream soon
     # FIXME: please check if still neccessary
-    git apply ../0001-rtems-newlib-Increase-FD_SETSIZE-to-256.patch
+    #git apply ../0001-rtems-newlib-Increase-FD_SETSIZE-to-256.patch
 
 	cd ../
 fi
