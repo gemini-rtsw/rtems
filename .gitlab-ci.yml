@@ -1,7 +1,7 @@
 
 include:
     project: 'nsf-noirlab/gemini/rtsw/gem-ci'
-    ref: "testing/2026q2"
+    ref: "rtems-858"
     file: 
      - '/templates/gitlab-ci/templates/global-rpm-container-docker.gitlab-ci.template.yml'
      - '/templates/gitlab-ci/templates/epics-base-rpm-container-docker.gitlab-ci.template.yml'
