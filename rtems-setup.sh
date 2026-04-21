@@ -29,6 +29,10 @@ export RTEMS_LEGACY_OR_LIBBSD="legacy"
 
 export RTEMS_BASE=/gem_base/targetOS/RTEMS/rtems
 
+# The RPM spec rebuilds the packaged RTEMS set itself. Keep the standalone
+# toolchain prebuild opt-in so CI does not pay for the same work twice.
+export RTEMS_PREBUILD_TOOLCHAIN=${RTEMS_PREBUILD_TOOLCHAIN:-0}
+
 # options
 while getopts 'GV:R:u:b:' OPTION
 do
@@ -98,8 +102,10 @@ cd rtems-deployment
 mkdir -p out/buildroot/BUILD
 mkdir -p out/buildroot/RPMS/x86_64
 
-## comment out for build for EPICS core devs
-../rtems-source-builder/source-builder/sb-set-builder --url=https://ftp.rtems.org/pub/rtems/cache/rsb/main ${RTEMS_VERSION}/rtems-powerpc
+## Enable for local toolchain-only prep; the RPM build path runs RSB itself.
+if [ "${RTEMS_PREBUILD_TOOLCHAIN}" = "1" ]; then
+	../rtems-source-builder/source-builder/sb-set-builder --url=https://ftp.rtems.org/pub/rtems/cache/rsb/main ${RTEMS_VERSION}/rtems-powerpc
+fi
 ./waf configure --prefix=${RTEMS_ROOT} --rsb=../rtems-source-builder --rpm-config=../gemini-config.ini --rpm-config-value=gemini_version=${checkout}
 
 ## .. and use this one for EPICS core devs
