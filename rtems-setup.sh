@@ -63,6 +63,37 @@ done
 
 export RTEMS_ROOT=${RTEMS_BASE}/${RTEMS_VERSION}
 
+apply_semver_overrides() {
+	local spec_file=$1
+	local semver_version=${RPM_SEMVER_BASE:-}
+	local derive_script=../gem-ci/scripts/derive-semver-rpm-env.sh
+	local derived_env
+
+	if [ -z "${semver_version}" ] && [ -n "${RTEMS_RELEASE}" ]; then
+		semver_version="${RTEMS_RELEASE%%rc*}"
+		semver_version="${semver_version%%-rc*}"
+		semver_version="${semver_version}.0"
+	fi
+
+	if [ ! -x "${derive_script}" ]; then
+		echo "INFO: semver derive script not found; leaving generated spec metadata unchanged"
+		return 0
+	fi
+
+	derived_env=$(CI_PROJECT_DIR=.. RPM_SEMVER_BASE="${semver_version}" "${derive_script}")
+	eval "${derived_env}"
+
+	if [ -n "${RPM_VERSION_OVERRIDE}" ]; then
+		sed -i -E "s/^(Version:[[:space:]]*).*/\\1${RPM_VERSION_OVERRIDE}/" "${spec_file}"
+	fi
+
+	if [ -n "${RPM_RELEASE_OVERRIDE}" ]; then
+		sed -i -E "s/^(Release:[[:space:]]*).*/\\1${RPM_RELEASE_OVERRIDE}%{?dist}/" "${spec_file}"
+	fi
+
+	echo "INFO: semver overrides version=${RPM_VERSION_OVERRIDE:-<none>} release=${RPM_RELEASE_OVERRIDE:-<none>}"
+}
+
 rm -rf rtems-source-builder rtems-deployment
 
 if [[ "$RTEMS_RELEASE" == *"rc"* ]]; then
@@ -114,10 +145,13 @@ fi
 
 ./waf rpmspec
 
+SPEC_FILE=out/gemini/gemini-powerpc-net-${RTEMS_LEGACY_OR_LIBBSD}-bsps.spec
+apply_semver_overrides "${SPEC_FILE}"
+
 #rpmbuild -bb out/gemini/gemini-powerpc-${RTEMS_LEGACY_OR_LIBBSD}-bsps.spec
 
 ## commenting out in favor of providing a container for epics core devs
-rpmbuild -bb out/gemini/gemini-powerpc-net-${RTEMS_LEGACY_OR_LIBBSD}-bsps.spec
+rpmbuild -bb "${SPEC_FILE}"
 
 ## provide support for initial set of EPICS base BSPs for EPICS core devs
 #rpmbuild -bb out/epics/net-${RTEMS_LEGACY_OR_LIBBSD}-bsps.spec
