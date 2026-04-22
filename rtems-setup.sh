@@ -94,6 +94,22 @@ apply_semver_overrides() {
 	echo "INFO: semver overrides version=${RPM_VERSION_OVERRIDE:-<none>} release=${RPM_RELEASE_OVERRIDE:-<none>}"
 }
 
+ensure_python_command() {
+	if command -v python >/dev/null 2>&1; then
+		return 0
+	fi
+
+	if ! command -v python3 >/dev/null 2>&1; then
+		echo "ERROR: neither python nor python3 is available in PATH" >&2
+		exit 1
+	fi
+
+	mkdir -p /usr/local/bin
+	ln -sf "$(command -v python3)" /usr/local/bin/python
+	hash -r
+	echo "INFO: installed python compatibility shim -> $(command -v python3)"
+}
+
 rm -rf rtems-source-builder rtems-deployment
 
 if [[ "$RTEMS_RELEASE" == *"rc"* ]]; then
@@ -147,6 +163,7 @@ fi
 
 SPEC_FILE=out/gemini/gemini-powerpc-net-${RTEMS_LEGACY_OR_LIBBSD}-bsps.spec
 apply_semver_overrides "${SPEC_FILE}"
+ensure_python_command
 
 #rpmbuild -bb out/gemini/gemini-powerpc-${RTEMS_LEGACY_OR_LIBBSD}-bsps.spec
 
