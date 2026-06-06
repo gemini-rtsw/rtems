@@ -31,10 +31,14 @@
 %define version 6.2
 %define rtems_major   6
 %define rsb_prefix    /gem_base/targetOS/RTEMS/rtems/%{rtems_major}
+# Short git hash of the repo commit this RPM was built from, embedded in
+# Release. build_rpm.sh exports GIT_HASH into the build container; fall back
+# to asking git directly (rpmbuild runs from the repo root) or "nogit".
+%define git_hash %(if [ -n "$GIT_HASH" ]; then echo "$GIT_HASH"; else git rev-parse --short HEAD 2>/dev/null || echo nogit; fi)
 
 Name:           %{name}
 Version:        %{version}
-Release:        0%{?dist}
+Release:        0.%{git_hash}%{?dist}
 Summary:        RTEMS %{rtems_major} PowerPC cross-toolchain and board support packages
 License:        GPLv2 and GPLv3 and BSD-2-Clause
 URL:            https://www.rtems.org/
