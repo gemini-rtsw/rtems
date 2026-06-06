@@ -169,9 +169,10 @@ ensure_python_command
 
 if [ "${RTEMS_RPM_WRAPPER}" = "1" ]; then
 	## Wrapper mode: invoked from inside rtems.spec %build. We must NOT run
-	## rpmbuild here (that would recurse). Instead reproduce what the generated
-	## spec's %build/%install do: run the RSB builder to produce the deployment
-	## bset tarball, then untar it into the buildroot the outer rpmbuild owns.
+	## rpmbuild here (that would recurse). Run the RSB builder to produce the
+	## deployment bset tarball; the spec's %install untars it into the
+	## buildroot (rpmbuild wipes the buildroot after %build, so unpacking it
+	## here would be futile).
 	bset="gemini/gemini-powerpc-net-${RTEMS_LEGACY_OR_LIBBSD}-bsps"
 	tarfile="$(pwd)/tar/$(basename "${bset}").tar.bz2"
 
@@ -185,10 +186,7 @@ if [ "${RTEMS_RPM_WRAPPER}" = "1" ]; then
 		echo "ERROR: expected RSB tarball not found: ${tarfile}" >&2
 		exit 1
 	fi
-
-	mkdir -p "${RTEMS_BUILDROOT}"
-	tar jxf "${tarfile}" -C "${RTEMS_BUILDROOT}"
-	echo "INFO: installed RTEMS deployment tarball into ${RTEMS_BUILDROOT}"
+	echo "INFO: RSB deployment tarball ready: ${tarfile}"
 else
 	## commenting out in favor of providing a container for epics core devs
 	rpmbuild -bb "${SPEC_FILE}"

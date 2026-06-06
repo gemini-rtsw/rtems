@@ -21,3 +21,6 @@ O.*/
 docker-compose.yml
 /rtems-source-builder
 /rtems-deployment
+/rpms/
+build_rpm.log*
+/.claude/

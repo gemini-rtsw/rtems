@@ -18,6 +18,10 @@
 # assumes native ELF and would otherwise fail on the cross-compiled tree.
 %global __os_install_post %{nil}
 %global _missing_build_ids_terminate_build 0
+# The package is noarch by convention (it is a self-contained tree under
+# /gem_base) but contains x86_64 host binaries (the cross-gcc etc.); disable
+# the arch-dependent-binaries-in-noarch check that would otherwise fail.
+%global _binaries_in_noarch_packages_terminate_build 0
 
 %define name    rtems
 # Keep in sync with RTEMS_RELEASE in rtems-setup.sh.
@@ -38,8 +42,11 @@ Source0:        %{name}-%{version}.tar.gz
 BuildArch:      noarch
 
 # Tools needed by the RTEMS Source Builder and rtems-deployment's waf build.
-BuildRequires:  bash git python3 curl tar xz findutils
-BuildRequires:  gcc gcc-c++ make patch bzip2 gzip
+# bison/flex/texinfo/m4 are enforced by RSB's host environment check; the
+# remaining entries cover sources unpack, configure, and rpm-build itself.
+BuildRequires:  bash git python3 python3-devel curl tar xz findutils diffutils which
+BuildRequires:  gcc gcc-c++ make patch bzip2 gzip unzip
+BuildRequires:  bison flex texinfo m4 autoconf automake libtool pkgconfig gettext
 BuildRequires:  rpm-build
 
 %description
@@ -60,16 +67,22 @@ fi
 
 # Build the toolchain only (RSB + waf); do NOT let rtems-setup.sh run its own
 # rpmbuild -- that is this spec's job. RTEMS_RPM_WRAPPER tells the script to
-# stop after the RSB tarball is produced and to install into our buildroot.
+# stop after the RSB bset tarball is produced; the install stage unpacks it.
+# (It must not be unpacked here: rpmbuild wipes the buildroot right before
+# the install stage runs, deleting anything staged during the build stage.
+# NB: spell section names like "install" without the percent sign in spec
+# comments -- rpm expands macros in comments and a literal percent-install
+# token here would be parsed as a duplicate section.)
 export RTEMS_RPM_WRAPPER=1
-export RTEMS_BUILDROOT="%{buildroot}"
 export RTEMS_RSB_PREFIX="%{rsb_prefix}"
 chmod +x ./rtems-setup.sh
 ./rtems-setup.sh
 
 %install
-# rtems-setup.sh (in wrapper mode) has already populated %{buildroot}%{rsb_prefix}
-# from the RSB tarball during %build. Nothing further to do here.
+# Unpack the RSB deployment tarball produced during the build stage. Its
+# contents are rooted at the rsb_prefix path already, so untar straight
+# into the buildroot.
+tar jxf rtems-deployment/tar/gemini-powerpc-net-legacy-bsps.tar.bz2 -C "%{buildroot}"
 test -d "%{buildroot}%{rsb_prefix}"
 
 %files
