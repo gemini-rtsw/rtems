@@ -2,12 +2,12 @@ name: Build
 
 on:
   push:
-    branches: [main]
+    branches: [main-el8]
   pull_request:
-    branches: [main]
+    branches: [main-el8]
 
 jobs:
   build:
-    uses: gemini-rtsw/gemini-rtsw-ci/.github/workflows/ci.yml@main
+    uses: gemini-rtsw/gemini-rtsw-ci/.github/workflows/ci.yml@main-el8
     with:
       scripts_dir: gemini-rtsw-ci
