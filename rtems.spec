@@ -58,6 +58,18 @@ RTEMS %{rtems_major} (release %{version}) PowerPC cross development tools
 and the Gemini "net-legacy" board support packages, installed under
 %{rsb_prefix}. Built from the RTEMS Source Builder via rtems-setup.sh.
 
+# The whole RTEMS package IS the cross-development toolchain (headers, libs,
+# cross-gcc) -- there is no separate runtime vs devel split. The -devel
+# subpackage exists so downstream specs and the dev container can depend on
+# "rtems-devel" uniformly; it just pulls in the full package.
+%package devel
+Summary:        RTEMS %{rtems_major} PowerPC cross-development toolchain (meta)
+Requires:       %{name} = %{version}-%{release}
+%description devel
+Development metapackage for RTEMS %{rtems_major}. Installs the full RTEMS
+cross-toolchain (%{name}); provided so consumers can BuildRequire/Require
+rtems-devel like other modules.
+
 %prep
 %autosetup -n %{name}-%{version}
 
@@ -93,6 +105,9 @@ test -d "%{buildroot}%{rsb_prefix}"
 %defattr(-,root,root,-)
 %dir %{rsb_prefix}
 %{rsb_prefix}/*
+
+%files devel
+# No files of its own; it depends on the main package (the full toolchain).
 
 %changelog
 * Fri Jun 05 2026 Gemini RTSW <rtsw@noirlab.edu> - 6.2-0
