@@ -1,8 +1,19 @@
 name: Build
 
 on:
+  # Manual trigger for a deliberate rebuild/release.
+  workflow_dispatch:
   push:
     branches: [main]
+    # This package is huge (a ~700MB toolchain / ~528MB base), so a commit that
+    # only touches CI plumbing must NOT trigger a rebuild -- it would mint a new
+    # NVR nothing consumes. Spec or source changes still build; use
+    # workflow_dispatch for a deliberate rebuild.
+    paths-ignore:
+      - '.github/**'
+      - 'gemini-rtsw-ci'
+      - '.gitmodules'
+      - '**.md'
   pull_request:
     branches: [main]
 
