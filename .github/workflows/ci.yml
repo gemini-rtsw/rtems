@@ -16,12 +16,6 @@ jobs:
     with:
       scripts_dir: gemini-rtsw-ci
       el_version: ${{ matrix.el }}
-      # Pipeline-port test build: do NOT register the RPM. Every commit here
-      # changes Release (0.<git hash>), so registering would add a ~700MB x2
-      # rtems pair to rpm-repo that nothing references -- epics-base pins
-      # rtems = 6.2-0.202178e. Set back to true (or drop the line) for a
-      # release that epics-base will actually be rebuilt against.
-      register: false
 
   # Rebuild rpm-repo:latest ONCE, after both EL legs have pushed their scratch
   # tags. Single writer -> no el8/el9 race on :latest. Shows as the final job.
